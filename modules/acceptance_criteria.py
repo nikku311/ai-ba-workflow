@@ -1,20 +1,10 @@
-from utils.gemini_client import get_gemini_response
-from config import SYSTEM_PROMPTS
+from utils.gemini_client import get_gemini_client
+
+AC_SYSTEM_INSTRUCTION = """You are a Technical Business Analyst specializing in Acceptance Criteria.
+Create comprehensive ACs using Given-When-Then format. Include positive, negative, and edge cases."""
 
 def generate_acceptance_criteria(user_story: str, additional_context: str = "") -> str:
-    """
-    User Story se detailed Acceptance Criteria generate karta hai
-    
-    Parameters:
-        user_story: Pehle se bani user story
-        additional_context: Extra info (optional)
-    
-    Returns:
-        Formatted ACs with Given-When-Then + edge cases
-    """
-    
-    prompt = f"""
-    Based on this User Story, create comprehensive Acceptance Criteria:
+    prompt = f"""Based on this User Story, create comprehensive Acceptance Criteria:
     
     USER STORY:
     {user_story}
@@ -44,21 +34,22 @@ def generate_acceptance_criteria(user_story: str, additional_context: str = "") 
        - Response time expectations
        - Load handling
     
-    Format har scenario ko clearly alag-alag dikhana. Numbering use karo.
-    """
-    
-    return get_gemini_response(prompt, SYSTEM_PROMPTS["acceptance_criteria"])
+    Format har scenario ko clearly alag-alag dikhana. Numbering use karo."""
+
+    try:
+        client = get_gemini_client()
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+            config={'system_instruction': AC_SYSTEM_INSTRUCTION}
+        )
+        return response.text
+    except Exception as e:
+        return f"Error in acceptance criteria generator: {str(e)}"
 
 
 def validate_story_completeness(user_story: str) -> str:
-    """
-    Check karta hai ki user story INVEST principle follow karti hai ya nahi
-    
-    INVEST = Independent, Negotiable, Valuable, Estimable, Small, Testable
-    """
-    
-    prompt = f"""
-    Review this User Story for completeness and quality:
+    prompt = f"""Review this User Story for completeness and quality:
     
     {user_story}
     
@@ -70,7 +61,15 @@ def validate_story_completeness(user_story: str) -> str:
     - Small: Ek sprint mein complete ho sakti hai?
     - Testable: Test karne layak hai?
     
-    Score each (1-5) and give improvement suggestions.
-    """
-    
-    return get_gemini_response(prompt, SYSTEM_PROMPTS["acceptance_criteria"])
+    Score each (1-5) and give improvement suggestions."""
+
+    try:
+        client = get_gemini_client()
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+            config={'system_instruction': AC_SYSTEM_INSTRUCTION}
+        )
+        return response.text
+    except Exception as e:
+        return f"Error in validation: {str(e)}"

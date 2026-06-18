@@ -137,7 +137,7 @@ elif page == "📝 User Stories":
     
     if generate_btn and requirement:
         with st.spinner("🤖 AI user story bana raha hai... ⏳"):
-            result = generate_user_story(requirement)
+            result = generate_user_story(requirement, model_choice)
         
         st.markdown('<p class="success-box">✅ User Story Generated!</p>', unsafe_allow_html=True)
         st.markdown("### 📋 Output:")
