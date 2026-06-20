@@ -24,25 +24,6 @@
 
 ## 🏗️ Architecture
 
-```mermaid
-graph TD
-    A[User Input: Business Requirement] --&gt; B{Module Router}
-    B --&gt;|User Stories| C[Requirement Generator]
-    B --&gt;|Acceptance Criteria| D[AC Generator]
-    B --&gt;|Emails| E[Email Drafter]
-    
-    C --&gt; F[Google Gemini API]
-    D --&gt; F
-    E --&gt; F
-    
-    F --&gt; G[Structured Output]
-    G --&gt; H[Streamlit UI]
-    H --&gt; I[User Review & Download]
-    
-    style A fill:#e1f5fe
-    style F fill:#fff3e0
-    style I fill:#e8f5e9
-
 **🛠️ Tech Stack**
 
 | Layer               | Technology                  | Purpose                        |
